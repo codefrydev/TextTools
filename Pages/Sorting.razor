@@ -1,9 +1,7 @@
 ﻿@page "/sortText"
 
 <br />
-<br />
-<br />
-<br />
+<br /> 
 <MudContainer Class="center-container">
     <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
         <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
@@ -25,17 +23,23 @@
                 </MudTextField>
             </MudPaper>
             <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
-                <MudButton Variant="Variant.Filled"
-                           StartIcon="@Icons.Material.Filled.Delete"
-                           Color="Color.Error" @onclick="Clear">Clear</MudButton>
-                <MudButton Variant="Variant.Filled"
-                           StartIcon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
-                           Color="Color.Tertiary" @onclick="ResultAsInput">Res Input</MudButton>
-                <MudButton Variant="Variant.Filled"
-                           StartIcon="@Icons.Material.Filled.ContentCopy"
-                           Color="Color.Info" @onclick="CopyToClipBoard">Copy</MudButton>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               aria-label="delete"
+                               Color="Color.Error"
+                               @onclick="Clear" />
+                <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
+                               Color="Color.Tertiary"
+                               aria-label="Result As Input"
+                               @onclick="ResultAsInput" />
+                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                               Color="Color.Info" 
+                               @onclick="CopyToClipBoard"
+                               aria-label="Copy To ClipBoard" /> 
 
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Primary" @onclick="Sort">Sort</MudButton>
+                <MudButton Variant="Variant.Filled" 
+                           StartIcon="@Icons.Material.Filled.RocketLaunch" 
+                           Color="Color.Primary" 
+                           @onclick="Sort">Sort</MudButton>
             </MudPaper>
             <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
 
