@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "TextTools",
   "resources": {
-    "hash": "sha256-prk5h5WU6CER8UAfjpsFt/dNBDzGv3pEWiII2AbYj20=",
+    "hash": "sha256-js1MPO7m9UYd86TXkuSddAS5JPVLXCwyF2OFjZnMFlM=",
     "jsModuleNative": {
       "dotnet.native.8.0.7.pvkr2na9g4.js": "sha256-tFsxPBbhkdn6GKNBKvCRLzrfAHdyM86odYTe0MtrwMk="
     },
@@ -57,7 +57,7 @@
       "System.Text.Json.wasm": "sha256-EaAWNKxvUp/cYXf5lJK89TdVKgc8jZUdZ8fci7HiDSo=",
       "System.Text.RegularExpressions.wasm": "sha256-dD0nA78pjBM9thgH6Hq6T1XFLBAmySg81aWYFMeD9F0=",
       "System.wasm": "sha256-eod/LnITNsO959j6LrwLxPaXkS+PqOWHAzGnsOB9iHI=",
-      "TextTools.wasm": "sha256-wSne3kmT4Jxp0fo8xAS4TW9mSbO3CjMCvjkJlqDai/8="
+      "TextTools.wasm": "sha256-rf5NkMXkOuGlu0zagEiqm200OfSUC/Q/Yyclb8QuvM4="
     }
   },
   "cacheBootResources": true,
