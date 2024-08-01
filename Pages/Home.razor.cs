@@ -17,7 +17,7 @@
                 Heading = "Sort Text",
                 ShortDescrption = "Sort a list in alphabetical, natural, reverse, or random order.",
                 ImageUrl = "https://picsum.photos/150",
-                PageUri = "/sortText"
+                PageUri = "sortText"
             });
             basicTools.Add(new Tool()
             {
@@ -48,7 +48,7 @@
                 Heading = "Word Count",
                 ShortDescrption = "Find out how many words, sentences, paragraphs, and characters you have written.",
                 ImageUrl = "https://picsum.photos/150",
-                PageUri = "/sortText"
+                PageUri = "sortText"
             });
         }
         void TextManipulation()
