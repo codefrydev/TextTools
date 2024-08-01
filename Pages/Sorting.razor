@@ -1,0 +1,176 @@
+﻿@page "/sortText"
+
+<br />
+<br />
+<br />
+<br />
+<MudContainer Class="center-container">
+    <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
+            <MudSelect @bind-Value="selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var algo in algoList)
+                {
+                    <MudSelectItem Value="@(algo)" />
+
+                }
+            </MudSelect>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="TextValue"
+                              Label="Input"
+                              AutoGrow
+                              Lines="20"
+                              Variant="Variant.Filled">
+
+                </MudTextField>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
+                <MudButton Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.Delete"
+                           Color="Color.Error" @onclick="Clear">Clear</MudButton>
+                <MudButton Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
+                           Color="Color.Tertiary" @onclick="ResultAsInput">Res Input</MudButton>
+                <MudButton Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.ContentCopy"
+                           Color="Color.Info" @onclick="CopyToClipBoard">Copy</MudButton>
+
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Primary" @onclick="Sort">Sort</MudButton>
+            </MudPaper>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="SortedText"
+                              Label="Output"
+                              Variant="Variant.Outlined"
+                              AutoGrow
+                              Disabled="true"
+                              Lines="20">
+
+                </MudTextField>
+            </MudPaper>
+        </MudPaper>
+        <br />
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="1">
+            <MudText>Details About Operation Or Similar Tools</MudText>
+        </MudPaper>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    public string TextValue { get; set; } = string.Empty;
+
+    public string SortedText { get; set; } = string.Empty;
+    [Inject] public IJSRuntime _jsRuntime { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
+
+    void ResultAsInput()
+    {
+        if (string.IsNullOrEmpty(SortedText)) return;
+
+        TextValue = SortedText;
+        SortedText = string.Empty;
+        SnackBarMessage("Result as Input");
+        StateHasChanged();
+    }
+    void SnackBarMessage(string message)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Configuration.ShowTransitionDuration = 30;
+        Snackbar.Add(message, Severity.Success);
+    }
+
+    public void CopyToClipBoard()
+    {
+        WriteTextAsync(SortedText);
+        if (string.IsNullOrEmpty(SortedText)) return;
+        SnackBarMessage("Text Copied To Clipboard");
+    }
+
+    List<string> algoList = new List<string>()
+    {
+        "Ascending","Character Length","Suffle","Reverse"
+    };
+    string selectedAlgo = "Ascending";
+    public void Sort()
+    {
+        switch (selectedAlgo)
+        {
+            case "Ascending":
+                SortedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x));
+                break;
+            case "Character Length":
+                SortedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x.Trim().Length));
+                break;
+            case "Suffle":
+                FisherYeatSuffle();
+                break;
+            default:
+                SortedText = string.Join("\n", TextValue.Split("\n").Reverse());
+                break;
+        }
+        StateHasChanged();
+    }
+    void FisherYeatSuffle()
+    {
+        var array = TextValue.Split("\n").ToArray();
+        var rand = new Random();
+        for (int i = 0; i < array.Length; i++)
+        {
+            var randIndex = rand.Next(i, array.Length);
+            var tempItem = array[randIndex];
+            array[randIndex] = array[i];
+            array[i] = tempItem;
+        }
+        SortedText = string.Join("\n", array);
+
+    }
+    void Clear()
+    {
+        TextValue = string.Empty;
+        StateHasChanged();
+    }
+
+    ValueTask WriteTextAsync(string text)
+    {
+        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+
+}
+
+
+
+
+
+@* @code{
+
+    private MudTextField<string> textFieldRef;
+}
+Redundant Code
+
+
+<MudPaper Class="mud-theme-white" Width="100%">
+    <MudTextField T="string"
+                  Label="Resizable Text Area"
+                  Variant="Variant.Filled"
+                  InputType="InputType.Text"
+                  @ref="textFieldRef"
+                  Placeholder="Enter text here..."
+                  Rows="4"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@Icons.Material.Filled.DragHandle"
+                  AdornmentClick="() => textFieldRef.Focus()"
+                  Class="resizable-textarea"
+                  Style="resize: vertical; overflow: auto;" />
+</MudPaper> *@
+<style>
+    .resizable-paper {
+        resize: vertical; /* Enable resizing in both directions */
+        overflow: auto; /* Show scrollbars when needed */
+    }
+
+    .resizable-textarea textarea {
+        resize: vertical; /* Enable resizing in both directions */
+        overflow: auto; /* Show scrollbars when needed */
+    }
+</style>

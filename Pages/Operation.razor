@@ -1,0 +1,52 @@
+﻿<MudItem xs="12" md="6" lg="4" xl="3" Class="rounded-lg"
+         @onmouseenter="OnMouseHover"
+         @onmouseleave="OnMouseExit"
+         @onclick="OpenTools">
+    <MudPaper Class="d-flex flex-row flex-grow-1"
+              Style="border-width:1px;border-color: black;"
+              Elevation="@elevation">
+
+        <MudImage Src="@item.ImageUrl" Height="130" Alt="Swedish Farm House" Style="background:transparent" Elevation="0" />
+        <MudPaper Class="d-flex flex-column flex-grow-1 ml-4 " Style="background:transparent" Elevation="0">
+            <MudPaper Width="100%" Height="30px" Style="background:transparent" Elevation="0">
+                <MudText>
+                    @item.Heading
+                </MudText>
+            </MudPaper>
+            <MudPaper Width="100%" Height="100px" Style="background:transparent" Elevation="0">
+                <MudText GutterBottom=false>
+                    @item.ShortDescrption
+                </MudText>
+            </MudPaper>
+        </MudPaper>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter] public Tool item { get; set; }
+    int elevation = 1;
+    void OnMouseHover()
+    {
+        elevation = 8;
+        StateHasChanged();
+    }
+    void OnMouseExit()
+    {
+        elevation = 1;
+        StateHasChanged();
+    }
+
+    [Inject] public NavigationManager navigationManager { get; set; }
+
+    void OpenTools()
+    {
+        Console.WriteLine("Clicked" + item.PageUri);
+        if (string.IsNullOrEmpty(item.PageUri))
+        {
+            return;
+        }
+        navigationManager.NavigateTo(item.PageUri);
+
+    }
+
+}

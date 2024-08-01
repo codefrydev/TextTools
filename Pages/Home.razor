@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<PageTitle>Text Tools</PageTitle> 
+
+<MudContainer Class="center-container">
+    <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0"> 
+        <br /><br /><br /><br />
+        <MudText Typo="Typo.h4">
+            "BASIC TOOLS"
+        </MudText>
+        <br />
+        <MudGrid Class="center-container">
+            @foreach (var item in basicTools)
+            {
+                <Operation item="@item"></Operation>
+            }
+        </MudGrid>
+
+        <br /><br /><br /><br />
+        <MudText Typo="Typo.h4">
+            "TEXT MANIPULATION TOOLS"
+        </MudText>
+        <br />
+        <MudGrid Class="center-container">
+            @foreach (var item in textManipulationTools)
+            {
+                <Operation item="@item"></Operation>
+            }
+        </MudGrid>
+
+    </MudPaper> 
+</MudContainer> 
