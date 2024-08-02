@@ -1,0 +1,130 @@
+﻿@page "/Workers/basic/caseconverter"
+@using System.Globalization
+<br />
+<br />
+<MudContainer Class="center-container">
+    <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
+            <MudSelect @bind-Value="selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var algo in algoList)
+                {
+                    <MudSelectItem Value="@(algo)" />
+
+                }
+            </MudSelect>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="TextValue"
+                              Label="Input"
+                              AutoGrow
+                              Lines="20"
+                              Variant="Variant.Filled">
+
+                </MudTextField>
+            </MudPaper>
+            <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               aria-label="delete"
+                               Color="Color.Error"
+                               @onclick="Clear" />
+                <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
+                               Color="Color.Tertiary"
+                               aria-label="Result As Input"
+                               @onclick="ResultAsInput" />
+                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                               Color="Color.Info"
+                               @onclick="CopyToClipBoard"
+                               aria-label="Copy To ClipBoard" />
+
+                <MudButton Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.RocketLaunch"
+                           Color="Color.Primary"
+                           @onclick="Operate">Operate</MudButton>
+            </MudPaper>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="OperatedText"
+                              Label="Output"
+                              Variant="Variant.Outlined"
+                              AutoGrow
+                              Disabled="true"
+                              Lines="20">
+
+                </MudTextField>
+            </MudPaper>
+        </MudPaper>
+        <br />
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="1">
+            <MudText>Details About Operation Or Similar Tools</MudText>
+        </MudPaper>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    public string TextValue { get; set; } = string.Empty;
+
+    public string OperatedText { get; set; } = string.Empty;
+    [Inject] public IJSRuntime _jsRuntime { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
+
+    void ResultAsInput()
+    {
+        if (string.IsNullOrEmpty(OperatedText)) return;
+
+        TextValue = OperatedText;
+        OperatedText = string.Empty;
+        SnackBarMessage("Result as Input");
+        StateHasChanged();
+    }
+    void SnackBarMessage(string message)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Configuration.ShowTransitionDuration = 30;
+        Snackbar.Add(message, Severity.Success);
+    }
+
+    public void CopyToClipBoard()
+    {
+        WriteTextAsync(OperatedText);
+        if (string.IsNullOrEmpty(OperatedText)) return;
+        SnackBarMessage("Text Copied To Clipboard");
+    }
+
+    List<string> algoList = new List<string>()
+    {
+        "UPPERCASE","lowercase","Title Case"
+    };
+    string selectedAlgo = "UPPERCASE";
+    public void Operate()
+    {
+        TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo; 
+        switch (selectedAlgo)
+        {
+            case "UPPERCASE":
+                OperatedText = TextValue.ToUpper();
+                break;
+            case "Character Length":
+                OperatedText = TextValue.ToUpper();
+                break;
+            case "Title Case":
+                OperatedText = textInfo.ToTitleCase(TextValue.ToLower());
+                break;
+            default:
+                OperatedText = string.Join("\n", TextValue.Split("\n"));
+                break;
+        }
+        StateHasChanged();
+    }
+    void Clear()
+    {
+        TextValue = string.Empty;
+        StateHasChanged();
+    }
+
+    ValueTask WriteTextAsync(string text)
+    {
+        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+
+}

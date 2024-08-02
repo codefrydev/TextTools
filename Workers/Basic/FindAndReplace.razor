@@ -1,0 +1,176 @@
+﻿@page "/Workers/basic/findandreplace"
+@using System.Globalization
+@using System.Text.RegularExpressions
+@using System.Text
+<br />
+<br />
+<MudContainer Class="center-container">
+    <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
+            <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
+
+                @foreach(var item in ToogleSwitch)
+                {
+                    <MudSwitch @bind-Value="@(ToogleSwitch[item.Key])"
+                               Label="@(item.Key)" Color="Color.Success" />
+                }
+                <MudSpacer/>
+                <MudCheckBox @bind-Value="ChangeOriginalAlso" Label="Modify Input Also"/>
+            </MudPaper>
+             
+            <MudGrid>
+                <MudItem sm="12" md="6">
+                    <MudTextField @bind-Value="findThis"
+                                  Label="Find This"
+                                  AutoGrow
+                                  Lines="3"
+                                  Variant="Variant.Filled">
+
+                    </MudTextField>
+                </MudItem>
+                <MudItem sm="12" md="6">
+                    <MudTextField @bind-Value="relplacer"
+                                  Label="Replace it With"
+                                  AutoGrow
+                                  Lines="3"
+                                  Variant="Variant.Filled">
+
+                    </MudTextField>
+                </MudItem>
+            </MudGrid>
+            <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               aria-label="delete"
+                               Color="Color.Error"
+                               @onclick="Clear" />
+                <MudIconButton Icon="@Icons.Material.Filled.KeyboardDoubleArrowUp"
+                               Color="Color.Tertiary"
+                               aria-label="Result As Input"
+                               @onclick="ResultAsInput" />
+                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                               Color="Color.Info"
+                               @onclick="CopyToClipBoard"
+                               aria-label="Copy To ClipBoard" />
+
+                <MudButton Variant="Variant.Filled"
+                           StartIcon="@Icons.Material.Filled.RocketLaunch"
+                           Color="Color.Primary"
+                           @onclick="Operate">Operate</MudButton>
+            </MudPaper>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="TextValue"
+                              Label="Input"
+                              AutoGrow
+                              Lines="8"
+                              Variant="Variant.Filled">
+
+                </MudTextField>
+            </MudPaper>
+            <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
+
+                <MudTextField @bind-Value="OperatedText"
+                              Label="Output"
+                              Variant="Variant.Outlined"
+                              AutoGrow
+                              Disabled="true"
+                              Lines="20">
+
+                </MudTextField>
+            </MudPaper>
+        </MudPaper>
+        <br />
+        <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="1">
+            <MudText>Details About Operation Or Similar Tools</MudText>
+        </MudPaper>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    string findThis = "Codefrydev";
+    string relplacer = "CFD";
+    public string TextValue { get; set; } = "This Codefrydev TextTools";
+
+    public string OperatedText { get; set; } = "This Codefrydev TextTools";
+    [Inject] public IJSRuntime _jsRuntime { get; set; }
+    [Inject] public ISnackbar Snackbar { get; set; }
+
+    public bool ChangeOriginalAlso { get; set; } = true;
+
+    Dictionary<string, bool> ToogleSwitch = new()
+    {
+        {"MatchCase",true},
+        {"WholeWord",true}
+    };
+    void ResultAsInput()
+    {
+        if (string.IsNullOrEmpty(OperatedText)) return;
+
+        TextValue = OperatedText;
+        OperatedText = string.Empty;
+        SnackBarMessage("Result as Input");
+        StateHasChanged();
+    }
+    void SnackBarMessage(string message)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Configuration.ShowTransitionDuration = 30;
+        Snackbar.Add(message, Severity.Success);
+    }
+
+    public void CopyToClipBoard()
+    {
+        WriteTextAsync(OperatedText);
+        if (string.IsNullOrEmpty(OperatedText)) return;
+        SnackBarMessage("Text Copied To Clipboard");
+    }
+
+    public void Operate()
+    {
+        string pattern = @$"\b{findThis}\b";
+
+        var sb = new StringBuilder();
+
+        foreach (var item in ToogleSwitch)
+        {
+            sb.Append(ToBinary(item.Value));
+        }
+        string check = sb.ToString(); 
+        Console.WriteLine(check);
+
+        if (check == "11")
+        {
+            OperatedText = Regex.Replace(TextValue, pattern, relplacer);
+        }
+        else if(check=="10")
+        {
+            OperatedText = TextValue.Replace(findThis, relplacer, StringComparison.CurrentCulture);
+        }
+        else if(check=="01")
+        {
+            OperatedText = Regex.Replace(TextValue, pattern, relplacer, RegexOptions.IgnoreCase);
+        }
+        else
+        {
+            OperatedText = TextValue.Replace(findThis, relplacer);
+        }
+        if (ChangeOriginalAlso) TextValue = OperatedText;
+        StateHasChanged();
+    }
+
+    int ToBinary(bool some)
+    {
+        return some ? 1 : 0;
+    }
+    void Clear()
+    {
+        TextValue = string.Empty;
+        StateHasChanged();
+    }
+
+    ValueTask WriteTextAsync(string text)
+    {
+        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+}

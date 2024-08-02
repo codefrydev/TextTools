@@ -1,4 +1,4 @@
-﻿@page "/sortText"
+﻿@page "/Workers/basic/sortText"
 
 <br />
 <br /> 
@@ -39,11 +39,11 @@
                 <MudButton Variant="Variant.Filled" 
                            StartIcon="@Icons.Material.Filled.RocketLaunch" 
                            Color="Color.Primary" 
-                           @onclick="Sort">Sort</MudButton>
+                           @onclick="Operate">Operate</MudButton>
             </MudPaper>
             <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
 
-                <MudTextField @bind-Value="SortedText"
+                <MudTextField @bind-Value="OperatedText"
                               Label="Output"
                               Variant="Variant.Outlined"
                               AutoGrow
@@ -63,16 +63,16 @@
 @code {
     public string TextValue { get; set; } = string.Empty;
 
-    public string SortedText { get; set; } = string.Empty;
+    public string OperatedText { get; set; } = string.Empty;
     [Inject] public IJSRuntime _jsRuntime { get; set; }
     [Inject] public ISnackbar Snackbar { get; set; }
 
     void ResultAsInput()
     {
-        if (string.IsNullOrEmpty(SortedText)) return;
+        if (string.IsNullOrEmpty(OperatedText)) return;
 
-        TextValue = SortedText;
-        SortedText = string.Empty;
+        TextValue = OperatedText;
+        OperatedText = string.Empty;
         SnackBarMessage("Result as Input");
         StateHasChanged();
     }
@@ -86,8 +86,8 @@
 
     public void CopyToClipBoard()
     {
-        WriteTextAsync(SortedText);
-        if (string.IsNullOrEmpty(SortedText)) return;
+        WriteTextAsync(OperatedText);
+        if (string.IsNullOrEmpty(OperatedText)) return;
         SnackBarMessage("Text Copied To Clipboard");
     }
 
@@ -96,21 +96,21 @@
         "Ascending","Character Length","Suffle","Reverse"
     };
     string selectedAlgo = "Ascending";
-    public void Sort()
+    public void Operate()
     {
         switch (selectedAlgo)
         {
             case "Ascending":
-                SortedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x));
+                OperatedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x));
                 break;
             case "Character Length":
-                SortedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x.Trim().Length));
+                OperatedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x.Trim().Length));
                 break;
             case "Suffle":
                 FisherYeatSuffle();
                 break;
             default:
-                SortedText = string.Join("\n", TextValue.Split("\n").Reverse());
+                OperatedText = string.Join("\n", TextValue.Split("\n").Reverse());
                 break;
         }
         StateHasChanged();
@@ -126,7 +126,7 @@
             array[randIndex] = array[i];
             array[i] = tempItem;
         }
-        SortedText = string.Join("\n", array);
+        OperatedText = string.Join("\n", array);
 
     }
     void Clear()

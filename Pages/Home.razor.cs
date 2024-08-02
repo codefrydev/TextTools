@@ -17,19 +17,21 @@
                 Heading = "Sort Text",
                 ShortDescrption = "Sort a list in alphabetical, natural, reverse, or random order.",
                 ImageUrl = "https://picsum.photos/150",
-                PageUri = "sortText"
+                PageUri = "Workers/basic/sortText"
             });
             basicTools.Add(new Tool()
             {
                 Heading = "Convert Case",
                 ShortDescrption = "Change the letter case to uppercase, lowercase, title case, sentence case, or capitalize.",
-                ImageUrl = "https://picsum.photos/150"
+                ImageUrl = "https://picsum.photos/150",
+                PageUri = "Workers/basic/caseconverter"
             });
             basicTools.Add(new Tool()
             {
                 Heading = "Find & Replace",
                 ShortDescrption = "Find all the instances the text appears in a text and replace it with another word.",
-                ImageUrl = "https://picsum.photos/150"
+                ImageUrl = "https://picsum.photos/150",
+                PageUri = "Workers/basic/findandreplace"
             });
             basicTools.Add(new Tool()
             {
