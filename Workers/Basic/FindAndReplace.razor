@@ -15,11 +15,10 @@
                                Label="@(item.Key)" Color="Color.Success" />
                 }
                 <MudSpacer/>
-                <MudCheckBox @bind-Value="ChangeOriginalAlso" Label="Modify Input Also"/>
             </MudPaper>
              
             <MudGrid>
-                <MudItem sm="12" md="6">
+                <MudItem sm="12" xs="12"  md="6">
                     <MudTextField @bind-Value="findThis"
                                   Label="Find This"
                                   AutoGrow
@@ -28,7 +27,7 @@
 
                     </MudTextField>
                 </MudItem>
-                <MudItem sm="12" md="6">
+                <MudItem sm="12" xs="12"  md="6">
                     <MudTextField @bind-Value="relplacer"
                                   Label="Replace it With"
                                   AutoGrow
@@ -56,6 +55,7 @@
                            StartIcon="@Icons.Material.Filled.RocketLaunch"
                            Color="Color.Primary"
                            @onclick="Operate">Operate</MudButton>
+                <MudCheckBox @bind-Value="ChangeOriginalAlso"/>
             </MudPaper>
             <MudPaper Class="mud-theme-white" Width="100%" Elevation="0">
 
