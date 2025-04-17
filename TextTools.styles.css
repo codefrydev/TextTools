@@ -1,3 +1,5 @@
+/* /Component/CSV/CsvDialogue.razor.rz.scp.css */
+/* /Component/ThumbnailText.razor.rz.scp.css */
 /* /Layout/MainLayout.razor.rz.scp.css */
 .page[b-c184o6r37c] {
     position: relative;
@@ -76,3 +78,96 @@ main[b-c184o6r37c] {
         padding-right: 1.5rem !important;
     }
 }
+/* /Pages/Operation.razor.rz.scp.css */
+.fancy-item[b-6snyq1i4zl] {
+    perspective: 1000px;
+    padding: 10px;
+    transition: transform 0.4s ease;
+}
+.fancy-item:hover[b-6snyq1i4zl] {
+    transform: scale(1.05) rotateX(2deg) rotateY(-2deg);
+}
+
+.fancy-paper[b-6snyq1i4zl] {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.fancy-paper:hover[b-6snyq1i4zl] {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2), 0 0 12px rgba(52,144,220,0.4);
+}
+
+/* Glowing gradient border via before pseudo-element */
+.fancy-paper[b-6snyq1i4zl]::before {
+    content: "";
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(60deg, #9be2fe, #67d3f9, #4098e0);
+    z-index: 0;
+    filter: blur(8px);
+    opacity: 0.7;
+    transition: opacity 0.4s ease;
+}
+.fancy-paper:hover[b-6snyq1i4zl]::before {
+    opacity: 1;
+}
+
+/* Content and overlay ordering */
+.fancy-paper > .icon-overlay[b-6snyq1i4zl],
+.fancy-paper > ThumbnailText[b-6snyq1i4zl],
+.fancy-paper > .fancy-content[b-6snyq1i4zl] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Heading shine animation */
+.fancy-heading[b-6snyq1i4zl] {
+    position: relative;
+    display: inline-block;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    overflow: hidden;
+}
+.fancy-heading[b-6snyq1i4zl]::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: rgba(255,255,255,0.6);
+    transform: skewX(-25deg);
+    animation: shine-b-6snyq1i4zl 2.5s infinite;
+}
+@keyframes shine-b-6snyq1i4zl {
+    0% { left: -75%; }
+    50% { left: 125%; }
+    100% { left: 125%; }
+}
+
+.fancy-text[b-6snyq1i4zl] {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    transition: color 0.4s ease;
+}
+.fancy-paper:hover .fancy-text[b-6snyq1i4zl] {
+    color: #333;
+}
+
+/* Decorative icon overlay with subtle animation */
+.icon-overlay[b-6snyq1i4zl] {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 60px; height: 60px;
+    background: rgba(64, 152, 224, 0.15);
+    border-radius: 50%;
+    animation: float-b-6snyq1i4zl 6s ease-in-out infinite;
+}
+@keyframes float-b-6snyq1i4zl {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+/* /Workers/Basic/CsvEditor.razor.rz.scp.css */
