@@ -1,21 +1,22 @@
-﻿<MudItem xs="12" md="6" lg="4" xl="3" Class="rounded-lg"
+﻿@using TextTools.Component
+<MudItem xs="12" md="6" lg="4" xl="3" Class="rounded-lg"
          @onmouseenter="OnMouseHover"
          @onmouseleave="OnMouseExit"
          @onclick="OpenTools">
     <MudPaper Class="d-flex flex-row flex-grow-1"
               Style="border-width:1px;border-color: black;"
-              Elevation="@elevation">
+              Elevation="@_elevation">
 
-        <MudImage Src="@item.ImageUrl" Height="130" Alt="Swedish Farm House" Style="background:transparent" Elevation="0" />
+        <ThumbnailText Text="@Item.Heading" />
         <MudPaper Class="d-flex flex-column flex-grow-1 ml-4 " Style="background:transparent" Elevation="0">
             <MudPaper Width="100%" Height="30px" Style="background:transparent" Elevation="0">
                 <MudText>
-                    @item.Heading
+                    @Item.Heading
                 </MudText>
             </MudPaper>
             <MudPaper Width="100%" Height="100px" Style="background:transparent" Elevation="0">
                 <MudText GutterBottom=false>
-                    @item.ShortDescrption
+                    @Item.ShortDescrption
                 </MudText>
             </MudPaper>
         </MudPaper>
@@ -23,30 +24,30 @@
 </MudItem>
 
 @code {
-    [Parameter] public Tool item { get; set; }
-    int elevation = 1;
+    [Parameter] public Tool Item { get; set; }
+    int _elevation = 1;
     void OnMouseHover()
     {
-        elevation = 8;
+        _elevation = 8;
         StateHasChanged();
     }
     void OnMouseExit()
     {
-        elevation = 1;
+        _elevation = 1;
         StateHasChanged();
     }
 
-    [Inject] public NavigationManager navigationManager { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
     void OpenTools()
     {
-        Console.WriteLine("Clicked" + item.PageUri);
-        if (string.IsNullOrEmpty(item.PageUri))
+        Console.WriteLine("Clicked" + Item.PageUri);
+        if (string.IsNullOrEmpty(Item.PageUri))
         {
             return;
         }
-        navigationManager.NavigateTo(item.PageUri);
+        NavigationManager.NavigateTo(Item.PageUri);
 
     }
-
+    
 }

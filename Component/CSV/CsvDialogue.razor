@@ -1,0 +1,59 @@
+<MudDialog>
+    <TitleContent>
+        Choose File Data Type
+    </TitleContent>
+    <DialogContent>
+        <MudPaper>
+            <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Selector == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+                <ChildContent>
+                    <MudPaper Class="ma-4 flex-grow-1">
+                        <MudList T="string" Class="d-flex flex-column mud-height-full">
+                            <MudDropZone T="DropItem" Identifier="1" Class="flex-grow-1" AllowReorder="true" />
+                        </MudList>
+                    </MudPaper>
+                </ChildContent>
+                <ItemRenderer>
+                    <MudListItem T="string" Text="@context.Name">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveItem(context)" />
+                        <MudTextField @bind-Value="@context" />
+                        <MudDropZone T="DropItem" Identifier="2" Class="flex-grow-1" AllowReorder="true" />
+                    </MudListItem>
+                </ItemRenderer>
+            </MudDropContainer> 
+            <MudIconButton Icon="@Icons.Material.Filled.PlusOne"/>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
+    {
+        dropItem.Item.Selector = dropItem.DropzoneIdentifier;
+    }
+
+    private List<DropItem> _items = [];
+
+    public class DropItem
+    {
+        public string Name { get; init; }
+        public string Selector { get; set; }
+    }
+
+    private void AddItem()
+    {
+        _items.Add( new DropItem()
+        {
+            Name = "Item " + (_items.Count + 1),
+            Selector = "1"
+        });
+        StateHasChanged();
+    }
+    private void RemoveItem(DropItem item)
+    {
+        _items.Remove(item);
+        StateHasChanged();
+    } 
+}

@@ -10,9 +10,9 @@
         </MudText>
         <br />
         <MudGrid Class="center-container">
-            @foreach (var item in basicTools)
+            @foreach (var item in _basicTools)
             {
-                <Operation item="@item"></Operation>
+                <Operation Item="@item"></Operation>
             }
         </MudGrid>
 
@@ -22,9 +22,9 @@
         </MudText>
         <br />
         <MudGrid Class="center-container">
-            @foreach (var item in textManipulationTools)
+            @foreach (var item in _textManipulationTools)
             {
-                <Operation item="@item"></Operation>
+                <Operation Item="@item"></Operation>
             }
         </MudGrid>
 

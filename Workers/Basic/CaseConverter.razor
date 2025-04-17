@@ -5,8 +5,8 @@
 <MudContainer Class="center-container">
     <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
         <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
-            <MudSelect @bind-Value="selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
-                @foreach (var algo in algoList)
+            <MudSelect @bind-Value="_selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var algo in _algoList)
                 {
                     <MudSelectItem Value="@(algo)" />
 
@@ -64,7 +64,7 @@
     public string TextValue { get; set; } = string.Empty;
 
     public string OperatedText { get; set; } = string.Empty;
-    [Inject] public IJSRuntime _jsRuntime { get; set; }
+    [Inject] public IJSRuntime JsRuntime { get; set; }
     [Inject] public ISnackbar Snackbar { get; set; }
 
     void ResultAsInput()
@@ -91,15 +91,12 @@
         SnackBarMessage("Text Copied To Clipboard");
     }
 
-    List<string> algoList = new List<string>()
-    {
-        "UPPERCASE","lowercase","Title Case"
-    };
-    string selectedAlgo = "UPPERCASE";
+    readonly List<string> _algoList = ["UPPERCASE", "lowercase", "Title Case"];
+    string _selectedAlgo = "UPPERCASE";
     public void Operate()
     {
-        TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo; 
-        switch (selectedAlgo)
+        var textInfo = CultureInfo.CurrentCulture.TextInfo; 
+        switch (_selectedAlgo)
         {
             case "UPPERCASE":
                 OperatedText = TextValue.ToUpper();
@@ -124,7 +121,7 @@
 
     ValueTask WriteTextAsync(string text)
     {
-        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        return JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 
 }

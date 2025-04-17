@@ -9,9 +9,9 @@
         <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
             <MudPaper Class="d-flex flex-row-reverse flex-grow-1 gap-4" Elevation="0">
 
-                @foreach(var item in ToogleSwitch)
+                @foreach(var item in _toogleSwitch)
                 {
-                    <MudSwitch @bind-Value="@(ToogleSwitch[item.Key])"
+                    <MudSwitch @bind-Value="@(_toogleSwitch[item.Key])"
                                Label="@(item.Key)" Color="Color.Success" />
                 }
                 <MudSpacer/>
@@ -19,7 +19,7 @@
              
             <MudGrid>
                 <MudItem sm="12" xs="12"  md="6">
-                    <MudTextField @bind-Value="findThis"
+                    <MudTextField @bind-Value="_findThis"
                                   Label="Find This"
                                   AutoGrow
                                   Lines="3"
@@ -28,7 +28,7 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem sm="12" xs="12"  md="6">
-                    <MudTextField @bind-Value="relplacer"
+                    <MudTextField @bind-Value="_relplacer"
                                   Label="Replace it With"
                                   AutoGrow
                                   Lines="3"
@@ -87,17 +87,17 @@
 </MudContainer>
 
 @code {
-    string findThis = "Codefrydev";
-    string relplacer = "CFD";
+    string _findThis = "Codefrydev";
+    string _relplacer = "CFD";
     public string TextValue { get; set; } = "This Codefrydev TextTools";
 
     public string OperatedText { get; set; } = "This Codefrydev TextTools";
-    [Inject] public IJSRuntime _jsRuntime { get; set; }
-    [Inject] public ISnackbar Snackbar { get; set; }
+    [Inject] public IJSRuntime? JsRuntime { get; set; }
+    [Inject] public ISnackbar? Snackbar { get; set; }
 
     public bool ChangeOriginalAlso { get; set; } = true;
 
-    Dictionary<string, bool> ToogleSwitch = new()
+    readonly Dictionary<string, bool> _toogleSwitch = new()
     {
         {"MatchCase",true},
         {"WholeWord",true}
@@ -128,32 +128,32 @@
 
     public void Operate()
     {
-        string pattern = @$"\b{findThis}\b";
+        var pattern = $"\b{_findThis}\b";
 
         var sb = new StringBuilder();
 
-        foreach (var item in ToogleSwitch)
+        foreach (var item in _toogleSwitch)
         {
             sb.Append(ToBinary(item.Value));
         }
-        string check = sb.ToString(); 
+        var check = sb.ToString(); 
         Console.WriteLine(check);
 
         if (check == "11")
         {
-            OperatedText = Regex.Replace(TextValue, pattern, relplacer);
+            OperatedText = Regex.Replace(TextValue, pattern, _relplacer);
         }
         else if(check=="10")
         {
-            OperatedText = TextValue.Replace(findThis, relplacer, StringComparison.CurrentCulture);
+            OperatedText = TextValue.Replace(_findThis, _relplacer, StringComparison.CurrentCulture);
         }
         else if(check=="01")
         {
-            OperatedText = Regex.Replace(TextValue, pattern, relplacer, RegexOptions.IgnoreCase);
+            OperatedText = Regex.Replace(TextValue, pattern, _relplacer, RegexOptions.IgnoreCase);
         }
         else
         {
-            OperatedText = TextValue.Replace(findThis, relplacer);
+            OperatedText = TextValue.Replace(_findThis, _relplacer);
         }
         if (ChangeOriginalAlso) TextValue = OperatedText;
         StateHasChanged();
@@ -171,6 +171,6 @@
 
     ValueTask WriteTextAsync(string text)
     {
-        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        return JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 }

@@ -5,8 +5,8 @@
 <MudContainer Class="center-container">
     <MudPaper MinWidth="90vw" Style="background:transparent" Elevation="0">
         <MudPaper Class="d-flex flex-column flex-grow-1 gap-4 pa-4" Elevation="2">
-            <MudSelect @bind-Value="selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
-                @foreach (var algo in algoList)
+            <MudSelect @bind-Value="_selectedAlgo" T="string" Label="Pizza" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var algo in _algoList)
                 {
                     <MudSelectItem Value="@(algo)" />
 
@@ -64,8 +64,8 @@
     public string TextValue { get; set; } = string.Empty;
 
     public string OperatedText { get; set; } = string.Empty;
-    [Inject] public IJSRuntime _jsRuntime { get; set; }
-    [Inject] public ISnackbar Snackbar { get; set; }
+    [Inject] public IJSRuntime? JsRuntime { get; set; }
+    [Inject] public ISnackbar? Snackbar { get; set; }
 
     void ResultAsInput()
     {
@@ -91,14 +91,11 @@
         SnackBarMessage("Text Copied To Clipboard");
     }
 
-    List<string> algoList = new List<string>()
-    {
-        "Ascending","Character Length","Suffle","Reverse"
-    };
-    string selectedAlgo = "Ascending";
+    readonly List<string> _algoList = ["Ascending", "Character Length", "Suffle", "Reverse"];
+    string _selectedAlgo = "Ascending";
     public void Operate()
     {
-        switch (selectedAlgo)
+        switch (_selectedAlgo)
         {
             case "Ascending":
                 OperatedText = string.Join("\n", TextValue.Split("\n").OrderBy(x => x));
@@ -119,12 +116,10 @@
     {
         var array = TextValue.Split("\n").ToArray();
         var rand = new Random();
-        for (int i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             var randIndex = rand.Next(i, array.Length);
-            var tempItem = array[randIndex];
-            array[randIndex] = array[i];
-            array[i] = tempItem;
+            (array[randIndex], array[i]) = (array[i], array[randIndex]);
         }
         OperatedText = string.Join("\n", array);
 
@@ -137,7 +132,7 @@
 
     ValueTask WriteTextAsync(string text)
     {
-        return _jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        return JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 
 }
